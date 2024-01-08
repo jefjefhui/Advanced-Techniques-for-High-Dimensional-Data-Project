@@ -30,18 +30,30 @@ Query 5: Given a location point, and a distance range. Dissect the distance rang
 
 
 How many value sets I have tested on each query.
+
 For query 1, I worked on 4 different sets of data. 
+
 For query 2, I worked on 3 different sets of data.
+
 For query 3, I worked on 2 different sets of data.
+
 For query 4, I worked on 1 case.
+
 For query 5, I worked on 1 case.
 
+
 What algorithm I have used on each query.
+
 For query 1, R-Tree, Linear Scan
+
 For query 2, KD-Tree, Linear Scan
+
 For query 3, R-Tree, Linear Scan
+
 For query 4, R-Tree, Linear Scan
+
 For query 5, KD-Tree, Linear Scan
+
 Detailed testing data is shown in the project report 
 
 
