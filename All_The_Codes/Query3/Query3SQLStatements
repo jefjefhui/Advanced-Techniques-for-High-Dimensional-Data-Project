@@ -1,0 +1,19 @@
+--This is Query3 SQL Statements 
+--Unlike previous query, Method 1(R-Tree) and Method 2(Linear Scan) doesn't have separate SQL Statemetns, since 
+--this query only look for accident within region and look for accident duration(difference), which doesn't need distance calculation,
+--so we don't need to create another sets of SQL statements for Linear Scan 
+
+--Case 1
+select id, EXTRACT(EPOCH From (end_time-start_time)) as difference 
+from accident
+where accident.geom && ST_MakeEnvelope(-121.517834,38.556757,-121.474902,38.588344,4326)
+Order by difference 
+
+
+
+
+--Case 2
+select id, start_time, end_time,EXTRACT(EPOCH From (end_time-start_time)) as difference 
+from accident
+where accident.geom && ST_MakeEnvelope(-121.935904,37.242877,-121.840773,37.356559,4326)
+Order by difference 

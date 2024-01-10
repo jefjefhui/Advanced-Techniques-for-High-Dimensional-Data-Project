@@ -1,0 +1,97 @@
+--Pick an accident from the dataset, find its KNN, K is the number of nearest neighbors. 
+--All the nearest neighbors severity level needs to be the same as the chosen accident severity level
+
+--Query 2 method one(kd tree) and query 2 method two linear scan has different SQL statements which will be stated clearly
+
+
+--Query 2 method one(KD tree) SQL statement starts from here 
+
+
+--First SQL query is to find out the selected accident longtitude and latitude 
+--For instnance, I pick id=A-1 as the chosen accident, I need to run the select statement to get the start_lat and start_lng 
+
+select start_lat, start_lng,severity
+from accident 
+where id='A-1'
+
+--After that I get start_lat=40.108909999999995 and start_lng=-83.09286 and severity=3
+
+
+--Using this select statement to get the case1 results (successfully tested)
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,ST_Transform(accident.geom, 4326),
+accident.geom<->'SRID=4326;POINT(-83.09286 40.108909999999995)'::geometry AS dist 
+from accident 
+where severity=3
+order by dist 
+limit 6
+
+
+
+--Test case2 starts here 
+--This time pick A-1000 as the accident id 
+--Run the following SQL statment to get the required start_lat, start_lng and severity 
+select start_lat, start_lng, severity 
+from accident 
+where id='A-1000'
+
+--After that I get start_lat=37.719809999999995 and start_lng=-121.65943  severity=2
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,ST_Transform(accident.geom, 4326),
+accident.geom<->'SRID=4326;POINT(-121.65943 37.719809999999995)'::geometry AS dist 
+from accident 
+where severity=2
+order by dist 
+limit 3
+
+
+--Test case 3 starts here 
+--This time pick A-50 as the accident id 
+--Run the following SQL statement to get the required start_lat, start_lng and severity 
+select start_lat, start_lng, severity
+from accident 
+where id='A-50'
+
+
+--After that I get start_lat=41.46747      and start_lng= -81.75909        severity = 2
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,ST_Transform(accident.geom, 4326),
+accident.geom<->'SRID=4326;POINT(-81.75909 41.46747)'::geometry AS dist 
+from accident 
+where severity=2
+order by dist 
+limit 4
+
+
+
+--Query 2 method 2 (linear scan) SQL statement starts from here 
+--Findding the start_lat, start_lng and severity is same as above, so it will only shows the second SQL statement for each case 
+
+--Case 1
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,
+accident.geom2<->'SRID=4326;POINT(-83.09286 40.108909999999995)'::geography AS dist 
+from accident 
+where severity=3
+order by dist 
+limit 6
+
+
+--Case 2
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,
+accident.geom2<->'SRID=4326;POINT(-121.65943 37.719809999999995)'::geography AS dist 
+from accident 
+where severity=2
+order by dist 
+limit 3
+
+
+--case 3 
+select id,severity, start_time, end_time, start_lat, start_lng, end_lat,end_lng,distance,state_value,
+zipcode,
+accident.geom2<->'SRID=4326;POINT(-81.75909 41.46747)'::geography AS dist 
+from accident 
+where severity=2
+order by dist 
+limit 4

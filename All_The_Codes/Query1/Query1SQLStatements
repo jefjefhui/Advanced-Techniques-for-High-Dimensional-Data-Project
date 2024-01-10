@@ -1,0 +1,103 @@
+--These are Query 1 SQL statements 
+--Method 1 (R-Tree) and Method 2(Linear Scan) have different SQL statements, which will be stated below clearly 
+
+
+--Query 1, Method 1 (R-Tree) SQL statement starts from here, it has 4 test cases
+--query one most updated  Case1   successfuly 
+
+select id, severity,start_time, end_time,start_lat, start_lng,
+ST_Transform(accident.geom,4326),state_value,
+
+accident.geom <-> 'SRID=4326;POINT(-112.074036 33.448376)'::geometry As dist 
+from accident 
+where start_time between '2021-12-25 00:00:00' AND '2021-12-26 00:00:00' AND end_time between '2021-12-25 00:00:00' AND '2021-12-26 00:00:00' 
+AND ST_DWithin(geom,ST_GeomFromText('POINT(-112.074036 33.448376)',4326),0.09009009)
+order by dist 
+
+
+
+
+--case 2: -122.180358  47.615825   '2020-12-05'  15<--range of distance 
+
+
+--case 3: -120.661476,47.596233,'2020-12-05',15
+
+--case4:-122.479729,47.163292,'2020-12-05',50
+
+
+--test case 2  successful
+select id, severity,start_time, end_time,start_lat, start_lng,
+ST_Transform(accident.geom,4326),state_value,
+
+accident.geom <-> 'SRID=4326;POINT(-122.180358 47.615825)'::geometry As dist 
+from accident 
+where start_time between '2020-12-05 00:00:00' AND '2020-12-06 00:00:00' AND end_time between '2020-12-05 00:00:00' AND '2020-12-06 00:00:00' 
+AND ST_DWithin(geom,ST_GeomFromText('POINT(-122.180358 47.615825)',4326),0.13513514)
+order by dist 
+
+
+
+
+--Successfully tested case 3 on python file 
+select id, severity,start_time, end_time,start_lat, start_lng,
+ST_Transform(accident.geom,4326),state_value,
+
+accident.geom <-> 'SRID=4326;POINT(-122.200676 47.610378)'::geometry As dist 
+from accident 
+where start_time between '2021-12-24 00:00:00' AND '2021-12-25 00:00:00' AND end_time between '2021-12-24 00:00:00' AND '2021-12-25 00:00:00' 
+AND ST_DWithin(geom,ST_GeomFromText('POINT(-122.200676 47.610378)',4326),0.13513514)
+order by dist 
+
+
+--Test case 4 successful 
+select id, severity,start_time, end_time,start_lat, start_lng,
+ST_Transform(accident.geom,4326),state_value,
+
+accident.geom <-> 'SRID=4326;POINT(-118.243683 34.052235)'::geometry As dist 
+from accident 
+where start_time between '2020-01-01 00:00:00' AND '2020-01-02 00:00:00' AND end_time between '2020-01-01 00:00:00' AND '2020-01-02 00:00:00' 
+AND ST_DWithin(geom,ST_GeomFromText('POINT(-118.243683 34.052235)',4326),0.04504505)
+order by dist 
+
+
+
+
+--Query 1 Method 2(Linear Scan) SQL statement starts from here 
+
+--Case 1
+select id, severity,start_time, end_time,start_lat, start_lng,state_value,
+
+accident.geom2 <-> 'SRID=4326;POINT(-112.074036 33.448376)'::geography As dist 
+from accident 
+where start_time between '2021-12-25 00:00:00' AND '2021-12-26 00:00:00' AND end_time between '2021-12-25 00:00:00' AND '2021-12-26 00:00:00' 
+AND ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-112.074036 33.448376)'),10000)
+order by dist 
+
+
+--Case 2
+select id, severity,start_time, end_time,start_lat, start_lng,state_value,
+
+accident.geom2 <-> 'SRID=4326;POINT(-122.180358 47.615825)'::geography As dist 
+from accident 
+where start_time between '2020-12-05 00:00:00' AND '2020-12-06 00:00:00' AND end_time between '2020-12-05 00:00:00' AND '2020-12-06 00:00:00' 
+AND ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-122.180358 47.615825)'),15000)
+order by dist 
+
+--Case 3
+select id, severity,start_time, end_time,start_lat, start_lng,state_value,
+
+accident.geom2 <-> 'SRID=4326;POINT(-122.200676 47.610378)'::geography As dist 
+from accident 
+where start_time between '2021-12-24 00:00:00' AND '2021-12-25 00:00:00' AND end_time between '2021-12-24 00:00:00' AND '2021-12-25 00:00:00' 
+AND ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-122.200676 47.610378)'),15000)
+order by dist 
+
+
+--Case 4
+select id, severity,start_time, end_time,start_lat, start_lng,state_value,
+
+accident.geom2 <-> 'SRID=4326;POINT(-118.243683 34.052235)'::geography As dist 
+from accident 
+where start_time between '2020-01-01 00:00:00' AND '2020-01-02 00:00:00' AND end_time between '2020-01-01 00:00:00' AND '2020-01-02 00:00:00' 
+AND ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-118.243683 34.052235)'),5000)
+order by dist 

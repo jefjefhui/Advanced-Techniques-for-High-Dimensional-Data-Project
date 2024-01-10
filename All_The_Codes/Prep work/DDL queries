@@ -1,0 +1,69 @@
+--Create the accident table 
+CREATE TABLE accident(
+	ID text PRIMARY KEY,
+	Severity integer,
+	Start_Time timestamp,
+	End_Time timestamp,
+	Start_Lat decimal, 
+	Start_Lng decimal,
+	End_Lat decimal,
+	End_Lng decimal, 
+	Distance decimal,
+	state_value varchar(255)
+
+	
+
+);
+
+--Decided to add more columns for more complex queries 
+ALTER TABLE accident
+ADD zipCode varchar(10)
+
+
+ALTER Table accident
+ADD timezone varchar(255)
+
+
+ALTER Table accident
+ADD weather_timestamp timestamp
+
+
+ALTER table accident
+ADD visibility decimal
+
+ALTER table accident 
+ADD wind_speed decimal
+
+ALTER table accident 
+ADD precipitation decimal
+
+
+ALTER table accident 
+ADD weather_Condition varchar(255)
+
+
+ALTER table accident 
+ADD sunrise_sunset varchar(255)
+
+
+--Import data to accident table 
+COPY accident(id,severity,start_time,end_time,start_lat,start_lng,end_lat,end_lng,distance,state_value,zipcode,timezone,weather_timestamp,visibility,wind_speed,precipitation,weather_condition,sunrise_sunset)
+from '/Users/jeffreyhui/Desktop/Data_Preprocessing_Project/preprocessing_Work/processed_Data_Final.csv'
+DELIMITER ','
+CSV HEADER;
+
+
+--Add the column geom 
+ALTER TABLE accident ADD column geom geometry(Point,4326);
+
+
+--Insert values to the column geom 
+UPDATE accident SET geom = ST_SetSRID(ST_MakePoint(start_lng,start_lat),4326);
+
+
+--Add the colum geom2
+ALTER TABLE accident ADD column geom2 geography(Point,4326);
+
+
+--Update geom2 values
+UPDATE accident SET geom2 =ST_SetSRID(ST_MakePoint(start_lng,start_lat),4326);

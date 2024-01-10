@@ -1,0 +1,12 @@
+--Query 4 SQL statements 
+--Both Method 1(R-tree) and method 2(Linear Scan) can use the same SQL statements, as this query doesn't relate to distance calculations 
+--Query 4 only has one test case, since bouding rectangle is the only input, so only one thing to test, so only one test case for query 4
+
+--Case 1
+Select severity, count(*), 100 * count(*)/CAST((select count(*) from accident where start_lng<=-112.051760 and start_lng>=-112.107335 and start_lat<=33.462049 and start_lat>=33.367202) AS float) as percentage
+from accident 
+where start_lng<=-112.051760 and start_lng>=-112.107335 and start_lat<=33.462049 and start_lat>=33.367202
+group by severity
+
+
+

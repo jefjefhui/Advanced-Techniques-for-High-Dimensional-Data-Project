@@ -1,0 +1,72 @@
+--Query 5 SQL statements are shown as follow 
+--Query 5 only takes longitude, latitude and distance range as inputs, so we have one test case, and all
+--its outputs values are exactly the same, which should be sufficient to proof the algorithms implemented in query 5 are working 
+
+--Case 1
+--Please run distance range= 2 first, then run distance range 2 to 4 and then run distance range 4 to 6.
+--After running all these SQL statements, it should gives you all the values in the python execution 
+
+--Distance range = 2
+select *
+from accident
+where ST_DWithin(geom,ST_GeomFromText('POINT(-111.909060 33.429259)',4326),0.01801802)
+
+--Distance range between 2 to 4 
+select *
+from accident 
+where ST_DWithin(geom,ST_GeomFromText('POINT(-111.909060 33.429259)',4326),0.03603604) and 
+id not in(
+	select id
+    from accident
+    where ST_DWithin(geom,ST_GeomFromText('POINT(-111.909060 33.429259)',4326),0.01801802)
+)
+
+
+--Distance range between 4 to 6
+select * 
+from accident 
+where ST_DWithin(geom,ST_GeomFromText('POINT(-111.909060 33.429259)',4326),0.05405405) and 
+id not in (
+	
+	select id 
+from accident 
+where ST_DWithin(geom,ST_GeomFromText('POINT(-111.909060 33.429259)',4326),0.03603604) 
+	
+
+)
+
+
+
+
+--Separate SQL statements for Query 5  method 2(linear scan) due to different distance metrics 
+
+--Case 1
+--Distance range = 2
+select *
+from accident
+where ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-111.909060 33.429259)'),2000)
+
+
+--Distance range between 2 to 4 
+select *
+from accident 
+where ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-111.909060 33.429259)'),4000) and 
+id not in(
+	select id
+    from accident
+    where ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-111.909060 33.429259)'),2000)
+)
+
+
+--Distance range between 4 to 6
+select * 
+from accident 
+where ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-111.909060 33.429259)'),6000) and 
+id not in (
+	
+	select id 
+from accident 
+where ST_DWithin(geom2,ST_GeogFromText('SRID=4326;POINT(-111.909060 33.429259)'),4000) 
+	
+
+)
